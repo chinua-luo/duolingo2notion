@@ -54,7 +54,11 @@ def check_exist(id):
 def get_mistakes(id):
     r = requests.get(f"https://android-api.duolingo.cn/2017-06-30/mistakes/users/{duolingo_id}/courses/{id}?fields=&includeSpeaking=true&limit=100&requestType=INBOX&includeListening=true",headers=headers)
     if r.ok:
-        for item in r.json():
+        items = r.json()
+        if len(items) == 0:
+            get_mistakes(id.replace("TW","CN"))
+            return 
+        for item in items:
             mistake = {}
             mistake["问题"] = item.get("prompt")
             mistake["答案"] = item.get("solutionTranslation")
