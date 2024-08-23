@@ -56,7 +56,7 @@ def get_mistakes(id):
     r = requests.get(f"https://android-api.duolingo.cn/2017-06-30/mistakes/users/{duolingo_id}/courses/{new_id}?fields=&includeSpeaking=true&limit=100&requestType=INBOX&includeListening=true",headers=headers)
     if r.ok:
         items = r.json()
-        print(f"get mistakes ${len(items)}")
+        print(f"get mistakes {len(items)}")
         for item in items:
             mistake = {}
             mistake["问题"] = item.get("prompt")
@@ -143,6 +143,9 @@ if __name__ == "__main__":
         f"https://www.duolingo.com/users/{os.getenv('USER_NAME').strip()}",
         headers=headers,
     )
-    duolingo_id = response.json()["id"]
-    get_duolingo_data()
-    get_user_data()
+    if response.ok:
+        duolingo_id = response.json()["id"]
+        get_duolingo_data()
+        get_user_data()
+    else:
+        print(f"Couldn't get user data {response.text}")
